@@ -1,0 +1,150 @@
+body {
+  background: #F8F8FF;
+  font-family: 'opensans-regular', sans-serif;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 30px;
+ color: #838C95;
+
+  -webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
+ -webkit-text-size-adjust: 100%;
+}
+/* ------------------------------------------------------------------ */
+/* Header Styles
+/* ------------------------------------------------------------------ */
+header {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+	color: #838C95;
+}
+
+header {
+  display: block;
+}
+
+
+header {
+  position: relative;
+  height: 45px;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* vertically center banner section */
+header:before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+header .banner {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 auto;
+  width: 85%;
+  height: 14px;
+}
+
+header .profile-pic {
+  text-align: left;
+  width: 146px;
+  height: 47px;
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+/* primary navigation
+--------------------------------------------------------------------- */
+#nav-wrap ul, #nav-wrap li, #nav-wrap a{
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+/* nav-wrap */
+#nav-wrap {
+  font: 12px 'opensans-bold', sans-serif;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin: 0 auto;
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  background-color: #334854;
+}
+
+.opaque { background-color: #626262; }
+
+ul#nav {
+  min-height: 48px;
+  width: auto;
+
+  /* center align the menu */
+  text-align: center;
+  display: inline-block;
+}
+
+#main {
+  width: 70vw;
+  margin: auto;
+  text-align: center;
+}
+
+#search {
+  height: 150px;
+  background-size: cover;
+  padding-right: 50px;
+  padding-left: 50px;
+  padding-top: 90px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+#search_bar {
+  width: 70vw;
+  margin: auto;
+  text-align: center;
+}
+
+#search_text {
+  display: inline-block;
+  background-color: #F1F1F1;
+}
+
+#search_btn {
+  display: inline-block;
+  width: 100px;
+  height: 55px;
+  background-color: #334854;
+}
+#main-header {
+  padding-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+#photo-select-btn {
+  color: #000;
+  display: flex !important;
+  justify-content: left !important;
+}
+
+#single-photo {
+  object-fit: contain;
+}
+
+.MuiImageListItemBar-titleWrapBottom {
+  padding: none;
+}
