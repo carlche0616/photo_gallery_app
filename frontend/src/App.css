@@ -145,6 +145,7 @@ ul#nav {
   object-fit: contain;
 }
 
-.MuiImageListItemBar-titleWrapBottom {
-  padding: none;
+#dialog {
+  min-height: 300;
 }
+

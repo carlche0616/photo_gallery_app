@@ -18,7 +18,7 @@ class Header extends Component {
                     </a> */}
                     <img
                         className="profile-pic"
-                        src={"images/logo3.png"}
+                        src={"images/logo/logo3.png"}
                         />
                     <ul id="nav" className="nav">
 

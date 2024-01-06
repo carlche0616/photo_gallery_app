@@ -17,13 +17,17 @@ public class PhotoTagServiceIMPL implements PhotoTagService {
     private PhotoTagRepo photoTagRepo;
 
     @Override
-    public String addPhotoTag(PhotoTagAddDTO photoTagAddDTO) {
-        PhotoTag photoTag = new PhotoTag(
+    public List<String> addPhotoTags(List<PhotoTagAddDTO> photoTagAddDTOList) {
+        List<String> ids = new ArrayList<>();
+        for (PhotoTagAddDTO photoTagAddDTO : photoTagAddDTOList) {
+            PhotoTag photoTag = new PhotoTag(
 
-                photoTagAddDTO.getPhotoID(),
-                photoTagAddDTO.getTag());
-        photoTagRepo.save(photoTag);
-        return photoTag.getTag();
+                    photoTagAddDTO.getPhotoID(),
+                    photoTagAddDTO.getTag());
+            photoTagRepo.save(photoTag);
+            ids.add(photoTag.getTag());
+        }
+        return ids;
     }
 
     @Override
@@ -42,15 +46,16 @@ public class PhotoTagServiceIMPL implements PhotoTagService {
     }
 
     @Override
-    public boolean deletePhotoTag(int photoID, String tag) {
-        List<PhotoTag> photoTag = photoTagRepo.getPhotoTag(photoID, tag);
-        if (photoTag.size() != 0) {
-            photoTagRepo.deleteAll(photoTag);
-            ;
-            return true;
-        } else {
-            System.out.println("Tag not found");
-            return false;
+    public List<String> deletePhotoTags(List<PhotoTagDTO> photoTagDTOList) {
+        List<String> tagsFailedToDelete = new ArrayList<>();
+        for (PhotoTagDTO photoTagDTO : photoTagDTOList) {
+            List<PhotoTag> photoTag = photoTagRepo.getPhotoTag(photoTagDTO.getPhotoID(), photoTagDTO.getTag());
+            if (photoTag.size() != 0) {
+                photoTagRepo.deleteAll(photoTag);
+            } else {
+                tagsFailedToDelete.add(photoTagDTO.getTag());
+            }
         }
+        return tagsFailedToDelete;
     }
 }

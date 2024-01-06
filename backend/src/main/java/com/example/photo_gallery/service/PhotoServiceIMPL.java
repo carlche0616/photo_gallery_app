@@ -17,13 +17,13 @@ public class PhotoServiceIMPL implements PhotoService {
     private PhotoRepo photoRepo;
 
     @Override
-    public String addPhoto(PhotoAddDTO photoAddDTO) {
+    public int addPhoto(PhotoAddDTO photoAddDTO) {
         Photo photo = new Photo(
             photoAddDTO.getPhotoName(),
             photoAddDTO.getIsFavorite()
         );
         photoRepo.save(photo);
-        return photo.getPhotoName();
+        return photo.getPhotoID();
     }
 
     @Override

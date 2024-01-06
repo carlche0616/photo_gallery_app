@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("api/v1/gallery")
-public class PhotoGalleryController {
+public class PhotoGalleryController {   
     @Autowired
     private PhotoService photoService;
 
@@ -28,8 +28,8 @@ public class PhotoGalleryController {
     private PhotoTagService photoTagService;
 
     @PostMapping(path = "/addPhoto")
-    public String addPhoto(@RequestBody PhotoAddDTO photoAddDTO) {
-        String id = photoService.addPhoto(photoAddDTO);
+    public int addPhoto(@RequestBody PhotoAddDTO photoAddDTO) {
+        int id = photoService.addPhoto(photoAddDTO);
         return id;
     }
 
@@ -61,7 +61,7 @@ public class PhotoGalleryController {
 
         String fileName = file.getOriginalFilename();
         try {
-            File f = new File("/Users/carl/Desktop/projects/photo_gallery/" + fileName);
+            File f = new File("/Users/carl/Desktop/projects/photo_gallery_app/frontend/public/images/" + fileName);
             file.transferTo(f);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -70,10 +70,10 @@ public class PhotoGalleryController {
         return ResponseEntity.ok("File uploaded successfully.");
     }
 
-    @PostMapping(path = "/addPhotoTag")
-    public String addPhotoTag(@RequestBody PhotoTagAddDTO photoTagAddDTO) {
-        String id = photoTagService.addPhotoTag(photoTagAddDTO);
-        return id;
+    @PostMapping(path = "/addPhotoTags")
+    public List<String> addPhotoTags(@RequestBody List<PhotoTagAddDTO> photoTagAddDTOList) {
+        List<String> ids = photoTagService.addPhotoTags(photoTagAddDTOList);
+        return ids;
     }
 
     @GetMapping(path = "/getAllPhotoTags/{id}")
@@ -82,9 +82,9 @@ public class PhotoGalleryController {
         return allPhotoTags;
     }
 
-    @DeleteMapping(path = "/deletePhotoTag/{id}/{tag}")
-    public Boolean deletePhotoTag(@PathVariable(value = "id") int id, @PathVariable(value = "tag") String tag) {
-        return photoTagService.deletePhotoTag(id, tag);
+    @DeleteMapping(path = "/deletePhotoTags")
+    public List<String> deletePhotoTags(@RequestBody List<PhotoTagDTO> photoTagDTOList) {
+        return photoTagService.deletePhotoTags(photoTagDTOList);
     }
 
     @GetMapping(path = "/getPhotosByTag/{tag}")

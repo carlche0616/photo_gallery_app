@@ -6,7 +6,7 @@ import com.example.photo_gallery.DTO.PhotoUpdateDTO;
 import java.util.List;
  
 public interface PhotoService {
-    String addPhoto(PhotoAddDTO photoAddDTO);
+    int addPhoto(PhotoAddDTO photoAddDTO);
  
     List<PhotoDTO> getAllPhotos();
  

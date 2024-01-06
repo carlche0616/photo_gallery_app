@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Dialog, DialogTitle, DialogContent, IconButton, Box, Grid, TextField, InputAdornment } from '@mui/material';
-import { Close, Check, Edit, ThirtyFpsSelect } from '@mui/icons-material';
+import { Dialog, DialogTitle, DialogContent, IconButton, Box, Grid, TextField, Button, Chip, Autocomplete, ImageListItemBar, Icon } from '@mui/material';
+import { Close, FavoriteBorder, Favorite, KeyboardReturn} from '@mui/icons-material';
 
 class EditPhoto extends Component {
     constructor(props) {
@@ -8,35 +8,71 @@ class EditPhoto extends Component {
         this.state = {
             isOpenDialog: true,
 
-            isEditPhotoName: false,
-            isEditPhotoNameTextBox: false,
-            isEditPhotoTags: false,
-            isEditPhotoTagsTextBox: false
+            id: this.props.data.id,
+            image: this.props.data.image instanceof File ? URL.createObjectURL(this.props.data.image) : this.props.data.image,
+            tags: this.props.data.tags,
+            name: this.props.data.name,
+            favorite: this.props.data.favorite,
+
+            isHoverImage: false,
+            tagInput: "",
+            nameInputIsError: false,
+            nameInputErrorMsg: "",
+            tagInputIsError: false,
+            tagInputErrorMsg: ""
 
         };
         this.closeEditPhoto = this.closeEditPhoto.bind(this);
-        this.handleClickEditPhotoName = this.handleClickEditPhotoName.bind(this);
-        this.handleClickEditPhotoTags = this.handleClickEditPhotoTags.bind(this);
+        this.handleDeleteTag = this.handleDeleteTag.bind(this);
+        this.handleAddTag = this.handleAddTag.bind(this);
+        this.handleEditName = this.handleEditName.bind(this);
+        this.saveEdit = this.saveEdit.bind(this);
     }
     closeEditPhoto() {
-        this.setState({ isOpenDialog: false });
+        this.props.handleCloseEdit();
     }
 
-    handleClickEditPhotoName() {
-        this.setState({ isEditPhotoName: !this.state.isEditPhotoName, isEditPhotoNameTextBox: !this.state.isEditPhotoNameTextBox });
+    handleDeleteTag(tagIdx) {
+        var updatedTags = this.state.tags;
+        updatedTags.splice(tagIdx, 1);
+        this.setState({ tags: updatedTags});
     };
 
-    handleClickEditPhotoTags() {
-        this.setState({ isEditPhotoTags: !this.state.isEditPhotoTags, isEditPhotoTagsTextBox: !this.state.isEditPhotoTagsTextBox });
-    };
+    handleAddTag(event) {
+        if (event.key === 'Enter' && event.target.value !== "") {
+            var updatedTags = this.state.tags;
+            if (!updatedTags.includes(event.target.value)) {
+                updatedTags.push(event.target.value);
+                this.setState({ tags: updatedTags, tagInputIsError: false, tagInputErrorMsg: ""});
+            } else {
+                this.setState({ tagInputIsError: true, tagInputErrorMsg: "Tag already exists"});
+            }
+            event.preventDefault();
+        }
+        if (event.key === 'Backspace') {
+            event.stopPropagation();
+        }
+    }
 
+    handleEditName(event) {
+        this.setState({ name: event.target.value })
+    }
+
+    saveEdit() {
+        this.props.handleSaveEdit({
+            'id': this.props.data.id,
+            'image': this.props.data.image,
+            'tags': this.state.tags,
+            'name': this.state.name,
+            'favorite': this.state.favorite
+        })
+    }
+    
+    getImageName(fullName) {
+        return fullName.split(".")[0]
+    }
 
     render() {
-
-        // const image = this.props.data.image;
-        // const tags = this.props.data.tags;
-        // const name = this.props.data.name;
-
         return (
             <Dialog fullWidth open={this.state.isOpenDialog}>
                 <Box sx={{
@@ -52,53 +88,98 @@ class EditPhoto extends Component {
                 <DialogContent>
                     <Grid container direction='row' columnSpacing={2}>
                         <Grid item xs={8.5} sx={{
+                            position: 'relative',
                             height: 300,
                             // border: 1,
                             borderRadius: '16px',
                             backgroundColor: '#F0F0F0',
-                            backgroundImage: `url("images/logo3.png")`,
+                            backgroundImage: `url('${this.state.image}')`,
                             backgroundSize: 'contain',
                             backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center'
-                        }} >
+                        }}
+
+                            onMouseEnter={() => this.setState({ isHoverImage: true })}
+                            onMouseLeave={() => this.setState({ isHoverImage: false })}
+                        >
+
+                            {this.state.isHoverImage && <ImageListItemBar
+                                position='top'
+                                sx={{
+                                    maxHeight: 25,
+                                    textAlign: 'right',
+                                    color: '#000'
+                                }}
+                                actionIcon={
+                                    <IconButton onClick={() => this.setState({ favorite: !this.state.favorite })}>
+                                        {this.state.favorite ? <Favorite sx={{ color: '#FFF' }} /> : <FavoriteBorder sx={{ color: '#FFF' }} />}
+                                    </IconButton>
+                                }
+                            />}
                         </Grid>
                         <Grid item xs={0.3}> </Grid>
                         <Grid container direction='column' xs={3}>
                             <TextField
                                 label="Photo Name"
                                 size="small"
-                                defaultValue="Photo name"
+                                defaultValue={this.getImageName(this.state.name)}
                                 variant="outlined"
                                 sx={{ paddingBottom: 2.5 }}
-                                disabled={!this.state.isEditPhotoNameTextBox}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton edge="end" size="small" color="#F1F1F1" onClick={this.handleClickEditPhotoName}>
-                                                {this.state.isEditPhotoName ? <Check /> : <Edit />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
+                                onChange={this.handleEditName}
                             >
                             </TextField>
-                            <TextField
-                                multiline
-                                rows={9}
-                                label="Tag"
-                                defaultValue="Tag"
-                                variant="outlined"
-                                disabled={!this.state.isEditPhotoTagsTextBox}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment sx={{position: 'absolute', bottom: 28, right: 13}}>
-                                            <IconButton edge="end" size="small" color="#F1F1F1" onClick={this.handleClickEditPhotoTags}>
-                                                {this.state.isEditPhotoTags ? <Check /> : <Edit />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
+                            <Autocomplete
+                                multiple
+                                options={[]}
+                                defaultValue="tags"
+                                freeSolo
+                                disableClearable
+                                style={{ maxWidth: 150 }}
+                                renderTags={() => (
+                                    <Box
+                                        style={{
+                                            overflow: 'auto', height: '155px', width: "150px"
+                                        }}>
+                                        {Array.from(this.state.tags).map((option, index) => (
+                                            <Chip
+                                                label={option}
+                                                size="small"
+                                                onDelete={() => this.handleDeleteTag(index)}
+                                            />
+                                        ))}
+                                    </Box>
+                                )
+                                }
+                                renderInput={(params) => (
+
+                                    <TextField
+                                        {...params}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (<KeyboardReturn size="small" sx={{marginTop: "2px", color:"#333"}}/>),
+                                        }}
+                                        error={this.state.tagInputIsError}
+                                        helperText={this.state.tagInputErrorMsg}
+                                        onKeyDown={this.handleAddTag}
+                                        size="small"
+                                        label="Tags"
+                                        placeholder="Add Tags"
+                                    />
+                                )}
                             />
+                            <div style={{ textAlign: "right" }}>
+                                <Button
+                                    variant="contained"
+                                    fullWidth size="medium"
+                                    sx={{
+                                        '&.MuiButton-root:hover': { bgcolor: '#334854' },
+                                        marginTop: 1,
+                                        backgroundColor: "#334854"
+                                    }}
+                                    onClick={this.saveEdit}>
+                                    Save
+                                </Button>
+                            </div>
 
                         </Grid>
                     </Grid>
